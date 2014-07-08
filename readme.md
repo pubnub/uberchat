@@ -1,6 +1,6 @@
 # Uber Chat
 
-Created with specifications from Boston.com
+Created with specifications from Boston.com. An advanced PubNub chatroom packaged as a jQuery plugin.
 
 ## Usage
 ```js
@@ -30,12 +30,6 @@ username | String | The username for this client.
 title | String | The title of the chat that appears on the panel.
 admins | Array | An array of usernames that should have special admin styling.
 
-
-## Testing
-
-```
-python -m SimpleHTTPServer
-```
 ## Examples
 
 ### Using custom PubNub Keys
@@ -83,4 +77,12 @@ $('#test-6').uberchat({
 title: 'Same instance as chat to the left.',
 instance: 5
 });
+```
+
+## Testing
+
+Serve index.html with python simple server.
+
+```
+python -m SimpleHTTPServer
 ```
