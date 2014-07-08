@@ -1,6 +1,6 @@
 # Uber Chat
 
-Created with specifications from Boston.com. An advanced PubNub chatroom packaged as a jQuery plugin.
+An advanced PubNub chatroom packaged as a jQuery plugin. Created with specifications from Boston.com. 
 
 ## Usage
 ```js
@@ -36,10 +36,10 @@ admins | Array | An array of usernames that should have special admin styling.
 ```js
 // test with custom keys
 $('#test-2').uberchat({ 
-subscribe_key: 'sub-c-5faa8f16-06e1-11e4-a211-02ee2ddab7fe',
-publish_key: 'pub-c-5984ffe6-3030-48f3-8b42-c045fac5e76f',
-title: 'Custom Keys',
-instance: 2
+    subscribe_key: 'sub-c-5faa8f16-06e1-11e4-a211-02ee2ddab7fe',
+    publish_key: 'pub-c-5984ffe6-3030-48f3-8b42-c045fac5e76f',
+    title: 'Custom Keys',
+    instance: 2
 });
 ```
 
@@ -47,35 +47,35 @@ instance: 2
 ```js
 // test with custom username
 $('#test-3').uberchat({
-title: 'Custom username: ' + whoami,
-username: 'Ian',
-instance: 3
+    title: 'Custom username: ' + whoami,
+    username: 'Ian',
+    instance: 3
 });
 ```
 
 ### Special styling for admins
 ```js
 // test with admin
-$('#test-4').uberchat({ 
-title: 'You are admin: ' + whoami,
-username: 'Ian',
-admins: ['Joe', 'Ian'],
-instance: 4
+    $('#test-4').uberchat({ 
+    title: 'You are admin: ' + whoami,
+    username: 'Ian',
+    admins: ['Joe', 'Ian'],
+    instance: 4
 });
 ```
 
 ### Embeding the same instance twice
 ```js
 // test with custom username
-$('#test-5').uberchat({ 
-title: 'Same Instance as chat to the right.',
-instance: 5
+    $('#test-5').uberchat({ 
+    title: 'Same Instance as chat to the right.',
+    instance: 5
 });
 
 // test with custom username
 $('#test-6').uberchat({ 
-title: 'Same instance as chat to the left.',
-instance: 5
+    title: 'Same instance as chat to the left.',
+    instance: 5
 });
 ```
 
