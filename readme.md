@@ -20,15 +20,15 @@ $('#test-1').uberchat();
 }
 ```
 
-| Property | Type | Notes |
--------------------
-| publish_key | String | Custom PubNub publish key. |
-| subscribe_key | String | Custom PubNub subscribe key. |
-| instance | String | A unique identifier for each chatroom. |
-| domain | String | Ability to separate chat via domains. Useful if ids overlap. |
-| username | String | The username for this client. |
-| title | String | The title of the chat that appears on the panel. |
-| admins | Array | An array of usernames that should have special admin styling. |
+Property | Type | Notes
+------------- | ------------- | -------------
+publish_key | String | Custom PubNub publish key.
+subscribe_key | String | Custom PubNub subscribe key.
+instance | String | A unique identifier for each chatroom.
+domain | String | Ability to separate chat via domains. Useful if ids overlap.
+username | String | The username for this client.
+title | String | The title of the chat that appears on the panel.
+admins | Array | An array of usernames that should have special admin styling.
 
 ## Examples
 
