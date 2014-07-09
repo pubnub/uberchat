@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<!-- saved from url=(0067)http://cinesport.boston.com/boxad/boston-globe-sportswriters/#boxad -->
+<html xmlns:fb="http://ogp.me/ns/fb#"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <title></title>
+        <link rel="stylesheet" href="http://edgecdn.cinesport.com/_ui/css/normalize.css">
+
+        <style>
+        .viewwindow {
+		    height: 199px;
+		}
+		.thumbtray {
+		    margin: 0 0 0 17px;
+		}
+		ul.thumblist li {
+		    margin: 0 16px 1px 0;
+		}
+		ul.thumblist li img {
+		    width: 71px;
+		    height: 40px;
+		}
+		.preroll {
+			width: 300px;
+			height: 250px;
+		}		
+        </style>
+
+        <!--[if lt IE 9]>
+		<script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		<script async="" src="analytics.js"></script><script language="JavaScript" type="text/javascript" src="jquery.min.js"></script>
+		<script language="JavaScript" type="text/javascript" src="jquery.easing.min.js"></script>
+		<script language="JavaScript" type="text/javascript" src="jquery.jqplugin.min.js"></script>
+		<script type="text/javascript">
+
+
+			//grab value from querystring
+			function querystring(key) {
+			   var re=new RegExp('(?:\\?|&)'+key+'=(.*?)(?=&|$)','gi');
+			   var r=[], m;
+			   while ((m=re.exec(document.location.search)) != null) r.push(m[1]);
+			   return r;
+			}
+
+			//hide console.log output
+			if (querystring('debug')[0] != 'true') {
+				if (typeof console !== "undefined") {
+				  console.logJack = console.log;
+				  window.log={}
+				  window.log.history = window.log.history || {};   // store logs to a global history for reference
+				  console.log=function(){
+				    //do nothing....
+				  }
+				}	
+			}
+
+		
+			/*********************
+			** START AD RELATED **
+			**********************/
+
+
+			//variables expected by lite ad player
+			var playerWidth = 300;
+			var fitToScreen = true;
+			var isUI = false;
+			var adPlayerHtml;
+			//functions expected by lite ad player
+			function getBumperUrl() {
+				return 'http://cdn.cinesport.com/bumpers/CineSport_2013.flv';
+			}
+			var baseAdVars = "key=cinesport;categories=sports;keywords=sports,basketball,baseball,hockey,nascar;context=affiliateId%3DBoston%20Globe%2CplayerTarget%3D2%2CplayerName%3DBoston-Globe-rail-boston-sportswriters;bannerAdTag=http%3A%2F%2Ft-ads.adap.tv%2Fa%2Ft%2Fcinesport%3Fspot%3Doverlay%26creativeType%3Dvast_overlay%26zid%3Dbanners%26affiliateId%3DBoston%20Globe%2CplayerName%3DBoston-Globe-rail-boston-sportswriters";
+			var currentAdVars = "key=cinesport;categories=sports;keywords=sports,basketball,baseball,hockey,nascar;context=affiliateId%3DBoston%20Globe%2CplayerTarget%3D2%2CplayerName%3DBoston-Globe-rail-boston-sportswriters;bannerAdTag=http%3A%2F%2Ft-ads.adap.tv%2Fa%2Ft%2Fcinesport%3Fspot%3Doverlay%26creativeType%3Dvast_overlay%26zid%3Dbanners%26affiliateId%3DBoston%20Globe%2CplayerName%3DBoston-Globe-rail-boston-sportswriters";
+			
+			if (window.location.hash) {
+				currentAdVars = baseAdVars.replace(/-rail-/g, '-'+window.location.hash.substr(1)+'-');
+				baseAdVars = currentAdVars;
+			}
+			
+			function getAdVars() {
+				return currentAdVars;
+			}
+			function getMuteAiAds() {
+				return true;
+			}
+			function getFold() {
+				return 'a';
+			}
+			function getPageUrl() {
+				return document.referrer;
+			}
+			function setSkinUrl(_skinUrl) {
+			}
+			// the pre roll finished, clear it off
+			function onBumperComplete() {
+				adPlayerHtml = $('.adcontainer .preroll').html(); 
+				$('.adcontainer .preroll').html('&nbsp;');
+				$('.adcontainer').hide();
+				pulse = setTimeout(flipSlide, flipDelay+1000);
+			}
+			// companion ad, generally 300x250
+			function onAdStart(adHtml, adWidth, adHeight, videoHeight) {
+				// no companion for boxad...stub
+			}
+			
+			/*******************
+			** END AD RELATED **
+			********************/
+
+
+
+
+			(function($) {
+				$.fn.thumbroll = function() {
+					 return this.each(function(idx) {
+						 $(this).mouseover(function(e){
+						 	if (promoMode) {
+								nextIdx = idx;
+								flipSlide(false);
+							 	clearTimeout(pulse);
+							}
+						 });
+						 $(this).mouseout(function(e){
+						 	flipDone();
+						 });
+					 });
+				 }
+				$.fn.slideroll = function() {
+					 return this.each(function(idx) {
+						 $(this).mouseover(function(e){
+						 	if (promoMode) {
+							 	clearTimeout(pulse);
+							}
+						 });
+						 $(this).mouseout(function(e){
+						 	flipDone();
+						 });
+					 });
+				 }
+			})(jQuery);
+
+
+
+			var pulse;
+			var flipDelay = 5000;
+			var currIdx = 0;
+			var nextIdx = 1;
+			var slideCnt;
+			var promoMode = true;
+			$(document).ready( function(){
+
+
+				var numRows = 1;//Math.floor((totalHeight-328)/60);
+				var totVids = numRows * 3;
+				
+				playerWidth = $(window).width();
+								
+				sizeUp();
+				
+				$.getJSON('/boston-globe-sportswriters/feed.json', function(data) {
+				
+					if (data.videos.length >= totVids) {
+						for (var i=0; i<totVids; i++) {
+							$('ul.slidelist').append('<li id="'+data.videos[i].bc_id+'"><a class="poster" href="'+data.videos[i].link+'" target="_blank" title="'+data.videos[i].title+'"><img class="main" src="'+data.videos[i].fullstill+'" width="'+playerWidth+'"><span>&nbsp;</span></a><div class="desc"><h2><a class="playvid" href="'+data.videos[i].link+'" target="_blank">'+data.videos[i].title+'</a></h2></div></li>');
+							$('ul.thumblist').append('<li id="nav_'+data.videos[i].bc_id+'"><a href="'+data.videos[i].link+'" target="_blank" title="'+data.videos[i].title+'"><img src="'+data.videos[i].thumb+'" alt="'+data.videos[i].title+'"/><span></span></a></li>');
+						}
+
+						$('.thumbtray').css('margin-top', 0);
+		
+						$('ul.thumblist li:eq('+currIdx+')').addClass('active');
+						slideCnt = $('ul.slidelist li').length;
+		
+						$('ul.thumblist li a').thumbroll();
+						$('ul.slidelist li a.poster').slideroll();
+						
+						sizeUp();
+						
+					}
+				});
+
+				
+				if (!($.browser.flash)) {
+					//fallback mobile 300x250 ad unit
+					var player_name = 'Boston-Globe-rail-boston-sportswriters'.replace(/-rail-/g, '-'+window.location.hash.substr(1)+'-');
+					$('.adcontainer .preroll').html('<iframe id="csprt_companion_ad_iframe" src="http://edgecdn.cinesport.com/v2/mobile_adunit.html#'+player_name+'" frameborder="0" align="top,left" marginheight="0" marginwidth="0" scrolling="no" width="300" height="250"></iframe>');
+					setTimeout(onBumperComplete, 12500);
+				}
+				
+			});
+			
+			function sizeUp() {
+				var playerHeight = (playerWidth/16)*9;
+				$('ul.slidelist li img').css('width', playerWidth);
+				$('ul.slidelist li').css('width', playerWidth);
+				$('ul.slidelist li img').css('height', playerHeight);
+				$('ul.slidelist li').css('height', playerHeight);
+				$('.viewwindow').css('width', playerWidth);		
+				$('ul.slidelist').css('width', 3*(playerWidth+5));
+				//thumbs
+				var tMargin = ((playerWidth-213)/4)-5;
+				$('.thumbtray').css('width', playerWidth);
+				$('.thumbtray').css('margin-left', tMargin);
+				$('ul.thumblist li').css('margin-right', tMargin);
+			}
+			
+			function flipSlide(loop) {
+				if (typeof(loop) === "undefined") { loop = true; }
+				xDest = nextIdx * playerWidth * -1;
+				$('ul.slidelist').stop();
+				clearTimeout(pulse);
+				$('ul.thumblist li:eq('+currIdx+')').removeClass('active');
+				$('ul.thumblist li:eq('+nextIdx+')').addClass('active');
+				currIdx = nextIdx;
+				nextIdx++;
+				nextIdx = nextIdx%slideCnt;
+				if (promoMode) {
+					if (loop)
+						$('ul.slidelist').animate({left: xDest},{duration:1200, easing:'easeInOutExpo', complete:flipDone});
+					else
+						$('ul.slidelist').animate({left: xDest},{duration:1200, easing:'easeInOutExpo'});
+				} else {
+					$('ul.slidelist').css({left:xDest});
+				}
+			}
+			function flipDone() {
+				if (promoMode)
+					pulse = setTimeout(flipSlide, flipDelay);
+			}
+		</script>
+		
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','__gaTracker');
+      __gaTracker('create', 'UA-49321904-1', 'auto');
+    </script>
+
+    <script>
+      __gaTracker('set', 'page', '/2_boston-globe-sportswriters_BOXAD');
+      __gaTracker('send', 'pageview');
+    </script>		
+		
+	<script type="text/javascript" src="adaptvInfo.js"></script></head>
+	<body style="background-color: rgb(255, 255, 255);" marginwidth="0" marginheight="0">
+		<div class="viewwindow" style="width: 260px;">
+		  	<ul class="slidelist" style="width: 795px;">
+
+		    <li id="3663202842001" style="width: 260px; height: 146.25px;"><a class="poster" href="http://cinesport.boston.com/boston-globe-sportswriters/finn-should-david-ortiz-be-an-all-star/" target="_blank" title="Finn: Should David Ortiz Be an All-Star?"><img class="main" src="315980433_3663187225001_video-still-for-video-3663202842001.jpg" width="260" style="width: 260px; height: 146.25px;"><span>&nbsp;</span></a><div class="desc"><h2><a class="playvid" href="http://cinesport.boston.com/boston-globe-sportswriters/finn-should-david-ortiz-be-an-all-star/" target="_blank">Finn: Should David Ortiz Be an All-Star?</a></h2></div></li><li id="3661684587001" style="width: 260px; height: 146.25px;"><a class="poster" href="http://cinesport.boston.com/boston-globe-sportswriters/silva-red-sox-fight-back-but-lose-in-12/" target="_blank" title="Silva: Red Sox Fight Back but Lose in 12"><img class="main" src="315980433_3661818192001_video-still-for-video-3661684587001.jpg" width="260" style="width: 260px; height: 146.25px;"><span>&nbsp;</span></a><div class="desc"><h2><a class="playvid" href="http://cinesport.boston.com/boston-globe-sportswriters/silva-red-sox-fight-back-but-lose-in-12/" target="_blank">Silva: Red Sox Fight Back but Lose in 12</a></h2></div></li><li id="3656530375001" style="width: 260px; height: 146.25px;"><a class="poster" href="http://cinesport.boston.com/boston-globe-sportswriters/mullen-red-sox-swept-by-cubs-at-fenway/" target="_blank" title="Mullen: Red Sox Swept by Cubs at Fenway"><img class="main" src="315980433_3656476962001_video-still-for-video-3656530375001.jpg" width="260" style="width: 260px; height: 146.25px;"><span>&nbsp;</span></a><div class="desc"><h2><a class="playvid" href="http://cinesport.boston.com/boston-globe-sportswriters/mullen-red-sox-swept-by-cubs-at-fenway/" target="_blank">Mullen: Red Sox Swept by Cubs at Fenway</a></h2></div></li></ul> 
+	    </div>
+	    <div class="thumbtray" style="width: 260px; margin-left: 6.75px; margin-top: 0px;">
+			<ul class="thumblist">
+
+			<li id="nav_3663202842001" class="active" style="margin-right: 6.75px;"><a href="http://cinesport.boston.com/boston-globe-sportswriters/finn-should-david-ortiz-be-an-all-star/" target="_blank" title="Finn: Should David Ortiz Be an All-Star?"><img src="315980433_3663187224001_thumbnail-for-video-3663202842001.jpg" alt="Finn: Should David Ortiz Be an All-Star?"><span></span></a></li><li id="nav_3661684587001" style="margin-right: 6.75px;"><a href="http://cinesport.boston.com/boston-globe-sportswriters/silva-red-sox-fight-back-but-lose-in-12/" target="_blank" title="Silva: Red Sox Fight Back but Lose in 12"><img src="315980433_3661818191001_thumbnail-for-video-3661684587001.jpg" alt="Silva: Red Sox Fight Back but Lose in 12"><span></span></a></li><li id="nav_3656530375001" style="margin-right: 6.75px;"><a href="http://cinesport.boston.com/boston-globe-sportswriters/mullen-red-sox-swept-by-cubs-at-fenway/" target="_blank" title="Mullen: Red Sox Swept by Cubs at Fenway"><img src="315980433_3656476961001_thumbnail-for-video-3656530375001.jpg" alt="Mullen: Red Sox Swept by Cubs at Fenway"><span></span></a></li></ul>
+	    </div>
+	    
+		
+		<div class="adcontainer">
+			<div class="preroll">
+			
+					<div id="cinesportliteplayer" class="liteplayer"> 
+					<div id="adaptv_ad_player_div" style="position: relative; visibility: visible; border: 0px; left: 0px; width: 300px; height: 0px; z-index: 5000; display: none; background-color: transparent;"></div><object id="litePlayerSwf" type="application/x-shockwave-flash" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="300" height="250">
+					<param name="bgcolor" value="#ffffff"><param name="wmode" value="transparent">
+					<param name="allowScriptAccess" value="always">
+					<param name="movie" value="http://edgecdn.cinesport.com/_media/flash/CsprtLitePlayer.swf">
+					<embed src="http://edgecdn.cinesport.com/_media/flash/CsprtLitePlayer.swf" name="litePlayerSwf" width="300" height="250" allowscriptaccess="always" bgcolor="#ffffff" wmode="transparent" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">
+					</object>
+					</div>			
+			
+			</div>
+		</div>
+			    
+	
+<div id="adaptvSpotDiv_1" style="left: 150px; top: 0px; height: 1px; width: 1px; position: absolute;"><object width="1px" height="1px" id="adaptvVWSpot_1" name="adaptvVWSpot_1" align="center"><param name="movie" value="//redir.adap.tv/redir/client/FPSDetector.swf"><param name="bgcolor" value="#000000"><param name="allowScriptAccess" value="always"><param name="FlashVars" value="autoStart=true"><embed src="//redir.adap.tv/redir/client/FPSDetector.swf" width="1px" height="1px" id="adaptvVWSpot_1" name="adaptvVWSpot_1" align="center" bgcolor="#000000" allowscriptaccess="always" flashvars="autoStart=true" type="application/x-shockwave-flash"></object></div><div id="adaptvSpotDiv_2" style="left: 299px; top: 125px; height: 1px; width: 1px; position: absolute;"><object width="1px" height="1px" id="adaptvVWSpot_2" name="adaptvVWSpot_2" align="center"><param name="movie" value="//redir.adap.tv/redir/client/FPSDetector.swf"><param name="bgcolor" value="#000000"><param name="allowScriptAccess" value="always"><param name="FlashVars" value="autoStart=true"><embed src="//redir.adap.tv/redir/client/FPSDetector.swf" width="1px" height="1px" id="adaptvVWSpot_2" name="adaptvVWSpot_2" align="center" bgcolor="#000000" allowscriptaccess="always" flashvars="autoStart=true" type="application/x-shockwave-flash"></object></div><div id="adaptvSpotDiv_3" style="left: 150px; top: 249px; height: 1px; width: 1px; position: absolute;"><object width="1px" height="1px" id="adaptvVWSpot_3" name="adaptvVWSpot_3" align="center"><param name="movie" value="//redir.adap.tv/redir/client/FPSDetector.swf"><param name="bgcolor" value="#000000"><param name="allowScriptAccess" value="always"><param name="FlashVars" value="autoStart=true"><embed src="//redir.adap.tv/redir/client/FPSDetector.swf" width="1px" height="1px" id="adaptvVWSpot_3" name="adaptvVWSpot_3" align="center" bgcolor="#000000" allowscriptaccess="always" flashvars="autoStart=true" type="application/x-shockwave-flash"></object></div><div id="adaptvSpotDiv_4" style="left: 0px; top: 125px; height: 1px; width: 1px; position: absolute;"><object width="1px" height="1px" id="adaptvVWSpot_4" name="adaptvVWSpot_4" align="center"><param name="movie" value="//redir.adap.tv/redir/client/FPSDetector.swf"><param name="bgcolor" value="#000000"><param name="allowScriptAccess" value="always"><param name="FlashVars" value="autoStart=true"><embed src="//redir.adap.tv/redir/client/FPSDetector.swf" width="1px" height="1px" id="adaptvVWSpot_4" name="adaptvVWSpot_4" align="center" bgcolor="#000000" allowscriptaccess="always" flashvars="autoStart=true" type="application/x-shockwave-flash"></object></div></body></html>

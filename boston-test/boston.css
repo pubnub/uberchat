@@ -1,0 +1,32 @@
+/*  Boston.com theme */
+.pubnub-uberchat {
+  border: 1px solid #efefef;
+  padding: 10px;
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+.pubnub-uberchat .chat-output {
+  border: 1px solid #efefef;
+  margin: 10px 0px;
+  line-height: 2em;
+}
+.pubnub-uberchat .panel-heading {
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1.5em;
+}
+.pubnub-uberchat .list-group-item {
+  border-bottom: 1px solid #efefef;
+  padding: 0px 10px;
+}
+.pubnub-uberchat .btn-default {
+  border: none;
+  height: 26px;
+  line-height: 26px;
+  padding-top: 0px;
+}
+.pubnub-uberchat .chat-input {
+  height: 26px;
+  line-height: 26px;
+  width: 250px;
+}

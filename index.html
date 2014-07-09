@@ -3,48 +3,27 @@
   <head>
     <title>Uberchat</title>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> 
+    <script src="//cdn.pubnub.com/pubnub.min.js"></script>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-    <script src="//cdn.pubnub.com/pubnub.min.js"></script>
-    <style type="text/css">
-    body {
-      padding: 10px;
-    }
-    .chat-output {
-      height: 200px;
-      overflow-y: scroll;
-      word-wrap: break-word;
-    }
-    .loading-history, .loading-complete {
-      text-align: center;
-      color: #ccc;
-      background-color: #efefef;
-    }
-    .admin {
-      color: red;
-    }
-    .remove {
-      position: absolute;
-      right: 10px;
-    }
-    </style>
+    <link rel="stylesheet" type="text/css" href="./style.css">
   </head>
   <body>
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-6">
-          <div id="test-1" class="panel panel-default"></div>
+          <div id="test-1"></div>
         </div>
         <div class="col-md-6">
-          <div id="test-2" class="panel panel-default"></div>
+          <div id="test-2"></div>
         </div>
       </div>
       <div class="row">
         <div class="col-md-6">
-          <div id="test-3" class="panel panel-default"></div>
+          <div id="test-3"></div>
         </div>
         <div class="col-md-6">
-          <div id="test-4" class="panel panel-default"></div>
+          <div id="test-4"></div>
         </div>
       </div>
     </div>

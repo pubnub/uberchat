@@ -1,0 +1,22 @@
+/*  Generic Styles */
+.pubnub-uberchat .chat-output {
+  height: 200px;
+  overflow-y: scroll;
+  word-wrap: break-word;
+}
+.pubnub-uberchat .list-group-item {
+  position: relative;
+}
+.pubnub-uberchat .loading-history, .pubnub-uberchat .loading-complete {
+  text-align: center;
+  color: #aaa;
+  background-color: #efefef;
+  border-bottom: 1px solid #aaa;
+}
+.pubnub-uberchat .admin {
+  color: red;
+}
+.pubnub-uberchat .remove {
+  position: absolute;
+  right: 10px;
+}

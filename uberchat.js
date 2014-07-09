@@ -147,18 +147,21 @@
       Users = new User_factory();
       me = new Client();
 
-      var $tpl = $('<div class="panel-heading">' + options.title + '</div> \
-        <ul class="list-group chat-output"> \
-        </ul> \
-        <div class="panel-body"> \
-          <form class="chat"> \
-            <div class="input-group"> \
-              <input type="text" class="form-control chat-input" /> \
-              <span class="input-group-btn"> \
-                <button type="submit" class="btn btn-default">Send Message</button> \
-              </span> \
-            </div> \
-          </form> \
+      var $tpl = $('\
+        <div class="panel panel-default pubnub-uberchat">\
+          <div class="panel-heading">' + options.title + '</div> \
+          <ul class="list-group chat-output"> \
+          </ul> \
+          <div class="panel-body"> \
+            <form class="chat"> \
+              <div class="input-group"> \
+                <input type="text" class="form-control chat-input" /> \
+                <span class="input-group-btn"> \
+                  <button type="submit" class="btn btn-default">Send Message</button> \
+                </span> \
+              </div> \
+            </form> \
+          </div> \
         </div>');
 
       $container.append($tpl);
