@@ -13,6 +13,7 @@
     .chat-output {
       height: 200px;
       overflow-y: scroll;
+      word-wrap: break-word;
     }
     .loading-history, .loading-complete {
       text-align: center;
@@ -21,6 +22,10 @@
     }
     .admin {
       color: red;
+    }
+    .remove {
+      position: absolute;
+      right: 10px;
     }
     </style>
   </head>
@@ -40,14 +45,6 @@
         </div>
         <div class="col-md-6">
           <div id="test-4" class="panel panel-default"></div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div id="test-5" class="panel panel-default"></div>
-        </div>
-        <div class="col-md-6">
-          <div id="test-6" class="panel panel-default"></div>
         </div>
       </div>
     </div>
@@ -79,29 +76,17 @@
       
       // test with custom username
       $('#test-3').uberchat({
-        title: 'Custom username: ' + whoami,
+        title: 'You are <strong>' + whoami + '</strong>. This is the same chat as unit to right.',
         username: whoami,
-        instance: 3
+        instance: 3,
+        admins: ['admin']
       });
       
-      // test with custom username
       $('#test-4').uberchat({ 
-        title: 'You are admin: ' + whoami,
-        username: whoami,
-        admins: [whoami],
-        instance: 4
-      });
-      
-      // test with custom username
-      $('#test-5').uberchat({ 
-        title: 'Same Instance as chat to the right.',
-        instance: 5
-      });
-      
-      // test with custom username
-      $('#test-6').uberchat({ 
-        title: 'Same instance as chat to the left.',
-        instance: 5
+        title: 'You are an <strong>admin</strong>. This is the same chat as unit to left.',
+        username: 'admin',
+        admins: ['admin'],
+        instance: 3
       });
 
     </script>

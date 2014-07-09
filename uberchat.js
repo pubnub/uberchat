@@ -20,7 +20,7 @@
     var me = null;
     var Users = null;
 
-    var channel = ['uber_chat', options.domain, options.instance].join(':');
+    var channel = ['uber_chat', options.domain, options.instance].join('-');
     var auto_scroll = true;
     var history_obj = {};
 
@@ -68,9 +68,10 @@
 
       self.is_admin = false;
 
-      self.chat = function (text, is_history) {
+      self.chat = function (text, id, is_history) {
 
-        var $line = $('<li class="list-group-item"><strong>' + self.uuid + ':</strong> </li>');
+        var $admin = '';
+        var $line = $('<li class="list-group-item" data-id="' + id + '"><strong>' + self.uuid + ':</strong> </li>');
         var $message = $('<span class="text" />').text(text).html();
 
         is_history = is_history || false;
@@ -80,6 +81,15 @@
         }
 
         $line.append($message);
+
+        if (me.is_admin) {
+          var $remove = $('<a href="#" class="remove">Remove</a>');
+          $remove.click(function(){
+            me.remove(id);
+            return false;
+          });
+          $line.append($remove);
+        }
 
         if (is_history) {
           $output.prepend($line);
@@ -109,6 +119,25 @@
 
       Users.set(self.uuid);
 
+      if(self.is_admin) {
+
+        self.remove = function(message_id) {
+          
+          pubnub.publish({
+            channel: channel,
+            message: {
+              type: 'remove',
+              payload: {
+                uuid: self.uuid,
+                id: message_id
+              }
+            }
+          });
+
+        }
+         
+      }
+
       return self;
 
     };
@@ -137,30 +166,54 @@
       $input = $container.find('.chat-input');
       $output = $container.find('.chat-output');
 
+      var first_load = true;
+      var full_history_loaded = false;
+
+      var moderation = [];
+
       pubnub = PUBNUB.init({
         publish_key: options.publish_key,
         subscribe_key: options.subscribe_key,
         uuid: me.uuid
       });
 
-      pubnub.subscribe({
-        channel: channel,
-        message: function (data) {
+      var handle_message = function(data, is_history) {
 
-          if (data.type === 'chat') {
+        // append chat messages
+        if (data.type === 'chat') {
 
-            Users.set(data.payload.uuid).chat(data.payload.text);
+          Users.set(data.payload.uuid).chat(data.payload.text, data.payload.id, is_history);
 
-            if (auto_scroll) {
-              $output.scrollTop($output[0].scrollHeight);
-            }
+          if (auto_scroll) {
+            $output.scrollTop($output[0].scrollHeight);
+          }
+ 
+        }
 
+        // add removals to array
+        if(data.type == "remove") {
+          moderation.push(data);
+        }
+
+        // moderate new list of messages based on new info
+        for(i = 0; i < moderation.length; i++) {
+
+          data = moderation[i];
+
+          if(Users.set(data.payload.uuid).is_admin){
+            $container.find('*[data-id="' + data.payload.id +'"]').remove();
           }
 
         }
-      });
 
-      var first_load = true;
+      }
+
+      pubnub.subscribe({
+        channel: channel,
+        message: function (data) {
+          handle_message(data, false);
+        }
+      });
 
       history_obj = {
         channel: channel,
@@ -181,8 +234,8 @@
 
               if (history[0][i].hasOwnProperty('payload')) {
 
-                data = history[0][i].payload;
-                Users.set(data.uuid).chat(data.text, true);
+                data = history[0][i];
+                handle_message(data, true); 
 
               }
 
@@ -201,6 +254,7 @@
 
             var $line = $('<li class="list-group-item loading-complete">End Of Chat Log</li>');
             $output.prepend($line);
+            full_history_loaded = true;
 
           }
 
@@ -217,15 +271,20 @@
 
           auto_scroll = true;
 
-          pubnub.publish({
-            channel: channel,
-            message: {
-              type: 'chat',
-              payload: {
-                text: $input.val(),
-                uuid: me.uuid
+          pubnub.uuid(function(message_id){
+            
+            pubnub.publish({
+              channel: channel,
+              message: {
+                type: 'chat',
+                payload: {
+                  text: $input.val(),
+                  uuid: me.uuid,
+                  id: message_id
+                }
               }
-            }
+            });
+
           });
 
         }
@@ -238,7 +297,7 @@
 
       $output.scroll(function () {
 
-        if ($output.scrollTop() === 0) {
+        if ($output.scrollTop() === 0 && !full_history_loaded) {
 
           pubnub.history(history_obj);
 
